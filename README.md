@@ -63,6 +63,5 @@ $ node example.js
 ```
 
 ## license
--------
 
 3-clause BSD. A copy is included with the source.
