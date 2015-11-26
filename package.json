@@ -1,14 +1,13 @@
 {
-  "name": "fork-stream",
-  "version": "0.0.4",
-  "description": "Fork a stream in multiple directions according to a function",
+  "name": "multi-fork",
+  "version": "0.1",
+  "description": "Fork a stream into multiple streams",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R tap"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/deoxxa/fork-stream.git"
+    "url": "git://github.com/schabluk/multi-fork.git"
   },
   "keywords": [
     "stream",
@@ -18,12 +17,12 @@
     "conditional"
   ],
   "author": "Conrad Pankoff <deoxxa@fknsrs.biz> (http://www.fknsrs.biz/)",
+  "contributors": [{
+    "name": "Lukasz Schabek",
+    "email": "lukasz.schabek@gmail.com"
+  }],
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/deoxxa/fork-stream/issues"
-  },
-  "devDependencies": {
-    "mocha": "~1.12.1",
-    "chai": "~1.7.2"
+    "url": "https://github.com/schabluk/multi-fork/issues"
   }
 }
