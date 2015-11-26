@@ -38,8 +38,8 @@ var docs = [
 var partitionByKey = 'type'
 var partitionRanges = ['Apple', 'Banana', 'Coco']
 
-var classifier = function(input, cb) {
-  var index = u.indexOf(partitionRanges, input[partitionByKey])
+var classifier = function(doc, cb) {
+  var index = u.indexOf(partitionRanges, doc[partitionByKey])
   return cb(null, index)
 }
 
