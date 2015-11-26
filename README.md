@@ -11,7 +11,7 @@ Fork a stream into multiple streams.
 Code:
 
 ```javascript
-var MultiFork = require("./")
+var MultiFork = require("multi-fork")
 var duplexer = require('duplexer2')
 var _ = require('highland')
 var u = require('underscore')
