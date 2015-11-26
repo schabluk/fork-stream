@@ -8,6 +8,8 @@ Fork a stream into multiple streams.
 
 ## example
 
+Partition events by matching object properties with set of ranges.
+
 Code:
 
 ```javascript
