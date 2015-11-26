@@ -12,7 +12,6 @@ Code:
 
 ```javascript
 var MultiFork = require("multi-fork")
-var duplexer = require('duplexer2')
 var _ = require('highland')
 var u = require('underscore')
 

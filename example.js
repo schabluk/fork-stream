@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var MultiFork = require("./")
-var duplexer = require('duplexer2')
 var _ = require('highland')
 var u = require('underscore')
 
