@@ -1,57 +1,66 @@
-var stream = require("stream");
+var stream = require("stream")
 
-var ForkStream = module.exports = function ForkStream(options) {
-  options = options || {};
+var MultiFork = module.exports = function MultiFork(n, options) {
+  options = options || {}
 
-  options.objectMode = true;
+  options.objectMode = true
 
-  stream.Writable.call(this, options);
+  stream.Writable.call(this, options)
 
   if (options.classifier) {
-    this._classifier = options.classifier;
+    this._classifier = options.classifier
   }
 
-  this.a = new stream.Readable(options);
-  this.b = new stream.Readable(options);
+  for (var i = 0; i < n; i++) {
+    this.streams.push(new stream.Readable(options))
+  }
 
-  var self = this;
+  var self = this
 
   var resume = function resume() {
     if (self.resume) {
-      var r = self.resume;
-      self.resume = null;
-      r.call(null);
+      var r = self.resume
+      self.resume = null
+      r.call(null)
     }
-  };
+  }
 
-  this.a._read = resume;
-  this.b._read = resume;
+  for (var i in this.streams) {
+    this.streams[i]._read = resume
+  }
 
   this.on("finish", function() {
-    self.a.push(null);
-    self.b.push(null);
-  });
-};
-ForkStream.prototype = Object.create(stream.Writable.prototype, {constructor: {value: ForkStream}});
+    for (var i = 0; i < n; i++) {
+      self.streams[i].push(null)
+    }
+  })
+}
 
-ForkStream.prototype._classifier = function(e, done) {
-  return done(null, !!e);
-};
+MultiFork.prototype = Object.create(stream.Writable.prototype, {constructor: {value: MultiFork}})
 
-ForkStream.prototype._write = function _write(input, encoding, done) {
-  var self = this;
+MultiFork.prototype.streams = []
 
-  this._classifier.call(null, input, function(err, res) {
+MultiFork.prototype._classifier = function(e, done) {
+  return done(null, !!e)
+}
+
+MultiFork.prototype._write = function _write(input, encoding, done) {
+
+  var self = this
+
+  this._classifier.call(null, input, function(err, index) {
     if (err) {
-      return done(err);
+      return done(err)
     }
 
-    var out = res ? self.a : self.b;
+    //console.log(self.streams[index], index)
 
-    if (out.push(input)) {
-      return done();
+    //var out = self.streams[index]
+
+    if (self.streams[index].push(input)) {
+      return done()
     } else {
-      self.resume = done;
+      self.resume = done
     }
-  });
-};
+  })
+}

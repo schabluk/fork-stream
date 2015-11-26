@@ -1,16 +1,42 @@
 #!/usr/bin/env node
 
-var ForkStream = require("./");
+var MultiFork = require("./")
+var duplexer = require('duplexer2')
+var _ = require('highland')
+var u = require('underscore')
 
-var fork = new ForkStream({
-  classifier: function classify(e, done) {
-    return done(null, e >= 5);
-  },
-});
+var streamJohn = _().each(function(data) {
+      console.log(_.extend(data, {sendTo: 'John'}))
+    })
+var streamAnna = _().each(function(data) {
+      console.log(_.extend(data, {sendTo: 'Anna'}))
+    })
+var streamBill = _().each(function(data) {
+      console.log(_.extend(data, {sendTo: 'Bill'}))
+    })
 
-fork.a.on("data", console.log.bind(null, "a"));
-fork.b.on("data", console.log.bind(null, "b"));
+var outputStreams = [streamJohn, streamAnna, streamBill]
 
-for (var i=0;i<20;++i) {
-  fork.write(Math.round(Math.random() * 10));
+var docs = [
+  {type: 'Apple'},
+  {type: 'Banana'},
+  {type: 'Coco'},
+  {type: 'Coco'}
+]
+var partitionByKey = 'type'
+var partitionRanges = ['Apple', 'Banana', 'Coco']
+
+var classifier = function(input, cb) {
+  var index = u.indexOf(partitionRanges, input[partitionByKey])
+  return cb(null, index)
 }
+
+var multiStream = new MultiFork(outputStreams.length, {
+  classifier: classifier
+})
+
+for (var index in multiStream.streams) {
+  multiStream.streams[index].pipe(outputStreams[index])
+}
+
+_(docs).pipe(multiStream)
